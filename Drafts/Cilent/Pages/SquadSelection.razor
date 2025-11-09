@@ -1,0 +1,30 @@
+@page "/squad"
+@inject ISquadService SquadService
+
+<h3>Squad Selection</h3>
+
+<div class="field-layout">
+    @foreach (var zone in ViewModel.FieldZones)
+    {
+    <FieldZone Zone="zone" OnDrop="OnDrop" />
+    }
+</div>
+
+<BenchList Players="ViewModel.BenchPlayers" OnDragStart="OnDragStart" />
+
+<button @onclick="AutoSuggest">Auto-Suggest Squad</button>
+
+@code {
+    private SquadSelectionViewModel ViewModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ViewModel = new SquadSelectionViewModel(SquadService);
+        await ViewModel.InitializeAsync();
+    }
+
+    private void OnDragStart(PlayerDto player) => ViewModel.StartDrag(player);
+    private void AllowDrop(DragEventArgs e) => e.PreventDefault();
+    private void OnDrop(FieldZone zone) => ViewModel.DropPlayer(zone);
+    private async Task AutoSuggest() => await ViewModel.AutoSuggestAsync();
+}

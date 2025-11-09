@@ -1,0 +1,14 @@
+<div class="field-zone" @ondrop="HandleDrop" @ondragover="AllowDrop">
+    @if (Zone.Player != null)
+    {
+        <PlayerCard Player="Zone.Player" />
+    }
+</div>
+
+@code {
+    [Parameter] public FieldZone Zone { get; set; }
+    [Parameter] public EventCallback<FieldZone> OnDrop { get; set; }
+
+    private void AllowDrop(DragEventArgs e) => e.PreventDefault();
+    private async Task HandleDrop(DragEventArgs e) => await OnDrop.InvokeAsync(Zone);
+}

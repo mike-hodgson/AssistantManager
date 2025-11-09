@@ -1,0 +1,14 @@
+<div class="bench">
+    <h4>Bench</h4>
+    @foreach (var player in Players)
+    {
+        <div class="bench-card" draggable="true" @ondragstart="() => OnDragStart(player)">
+            @player.Name (@player.PreferredPosition)
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<PlayerDto> Players { get; set; }
+    [Parameter] public EventCallback<PlayerDto> OnDragStart { get; set; }
+}
