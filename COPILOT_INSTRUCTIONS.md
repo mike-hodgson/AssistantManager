@@ -20,6 +20,7 @@ AssistantCoach is a Blazor WebAssembly PWA designed for amateur football coaches
 
 ## 📦 Project Structure
 
+``` text
 AssistantCoach/
 ├── Client/                     # Blazor WebAssembly frontend
 │   ├── Pages/                  # Routeable .razor pages (SquadSelection, EventDetail, etc.)
@@ -42,12 +43,14 @@ AssistantCoach/
 │   ├── Client.Tests/           # ViewModel and UI logic tests
 │   ├── Server.Tests/           # API and service layer tests
 │   └── Shared.Tests/           # DTO and mapping tests
+```
 
 ---
 
 ## 🧩 Core Models
 
 ### Player
+
 - FirstName, Surname, Nickname, Phone, Address, DateOfBirth, RegistrationNumber
 - `List<PositionPreference>`: preferred positions and comfort levels
 - `List<InjuryRecord>`: injury history
@@ -55,22 +58,28 @@ AssistantCoach/
 - `List<CoachRating>`: coach-assigned ratings per position
 
 ### Event
+
 - EventDate, EventType (Training, Match), Location, Notes
 - `List<PlayerAvailability>`: per-player status
 
 ### PositionPreference
+
 - PositionCode (e.g. "CB", "ST"), ComfortLevel (1–10)
 
 ### InjuryRecord
+
 - StartDate, EndDate, Notes
 
 ### PlayerAvailability
+
 - PlayerId, EventId, Status (Available, Unavailable, Maybe), Notes
 
 ### CoachRating
+
 - PlayerId, PositionCode, Rating (0–10)
 
 ### FieldZone (UI-only)
+
 - Label (e.g. "LB"), ZoneGroup (e.g. "Defense"), Player, IsLocked
 
 ---
@@ -78,33 +87,39 @@ AssistantCoach/
 ## 🔄 Feature Modules
 
 ### 1. Squad Selection
+
 - Drag/drop players into field zones
 - Auto-suggest based on availability, comfort, injuries, coach ratings
 - Lock zones to prevent overwrite
 - Bench list for unassigned players
 
 ### 2. Event Management
+
 - Create/edit training and match events
 - Assign player availability
 - Filter by date, type, location
 
 ### 3. Player Profiles
+
 - View/edit player details
 - Track injury history
 - Set position preferences
 - Assign coach ratings per position
 
 ### 4. Training Planner
+
 - Create training sessions with drills
 - Track attendance
 - Export printable session plans
 
 ### 5. Matchday Dashboard
+
 - View selected squad and formation
 - Track substitutions and minutes played
 - Mark goals, cards, injuries
 
 ### 6. Season Stats
+
 - Attendance summaries
 - Injury tracking
 - Minutes played, goals, cards
@@ -125,6 +140,7 @@ AssistantCoach/
 ## 🔌 API Endpoints
 
 ### PlayersController
+
 - `GET /api/players`
 - `GET /api/players/{id}`
 - `POST /api/players`
@@ -132,6 +148,7 @@ AssistantCoach/
 - `DELETE /api/players/{id}`
 
 ### EventsController
+
 - `GET /api/events`
 - `GET /api/events/{id}`
 - `POST /api/events`
@@ -139,10 +156,12 @@ AssistantCoach/
 - `DELETE /api/events/{id}`
 
 ### AvailabilityController
+
 - `GET /api/availability/event/{eventId}`
 - `POST /api/availability`
 
 ### SquadController
+
 - `POST /api/squad/suggest` → returns suggested FieldZones and Bench list
 
 ---
@@ -150,12 +169,14 @@ AssistantCoach/
 ## 🧠 ViewModels
 
 ### SquadSelectionViewModel
+
 - `List<FieldZone> FieldZones`
 - `List<PlayerDto> BenchPlayers`
 - `PlayerDto? DraggedPlayer`
 - Methods: `InitializeAsync()`, `StartDrag()`, `DropPlayer()`, `AutoSuggestAsync()`
 
 ### EventDetailViewModel
+
 - `EventDto CurrentEvent`
 - `List<PlayerAvailabilityDto> Availability`
 - Methods: `LoadEvent()`, `UpdateAvailability()`, `SaveEvent()`
