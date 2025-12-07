@@ -374,3 +374,4 @@ public class SuspensionRecord {
 - Use GitHub Pages for deployment (Blazor WASM static site)
 - Prioritize responsiveness for iPad Air (5th gen) and 4K desktop screens
 - Target framework: net10.0 (Visual Studio 2026).
+- 📌 Formation Designer module to be revisited later (see archived planning notes in ./docs/archive/football-app-tech.md)
