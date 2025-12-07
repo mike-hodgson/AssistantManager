@@ -1,8 +1,8 @@
-# AssistantCoach – Blazor WebAssembly Coaching App
+# AssistantManager – Blazor WebAssembly Coaching App
 
 ## 🧭 Overview
 
-AssistantCoach is a Blazor WebAssembly PWA designed for amateur football coaches to manage players, events, squad selection, training, and matchday logistics. It runs entirely client-side with a lightweight ASP.NET Core Web API backend and uses EF Core with SQLite for persistence. The app is optimized for use on both desktop and tablet (e.g. iPad Mini), with responsive design and offline support.
+AssistantManager is a Blazor WebAssembly PWA designed for amateur football coaches to manage players, events, squad selection, training, and matchday logistics. It runs entirely client-side with a lightweight ASP.NET Core Web API backend and uses EF Core with SQLite for persistence. The app is optimized for use on both desktop (including 4K screens) and tablet (iPad Air 5th gen), with responsive design and offline support.
 
 ---
 
@@ -20,8 +20,8 @@ AssistantCoach is a Blazor WebAssembly PWA designed for amateur football coaches
 
 ## 📦 Project Structure
 
-``` text
-AssistantCoach/
+```plaintext
+AssistantManager/
 ├── Client/                     # Blazor WebAssembly frontend
 │   ├── Pages/                  # Routeable .razor pages (SquadSelection, EventDetail, etc.)
 │   ├── Components/             # Reusable UI components (FieldZone, BenchList, PlayerCard)
@@ -127,6 +127,52 @@ AssistantCoach/
 
 ---
 
+## 🟥 Suspension Logic
+
+### 🔒 Suspension Rules Summary
+
+Based on IFAB Laws of the Game and NSFA competition regulations:
+
+- Red Card: Immediate suspension for minimum 1 match. Additional matches may be added depending on severity.
+- Second Yellow in Same Match: Treated as a red card (1-match suspension).
+- Accumulated Yellow Cards:
+  - 5 yellow cards = 1-match suspension.
+  - Additional suspensions at 8 and 11 yellows.
+  - Count resets after the regular season unless otherwise specified by competition rules.
+- Carry-Over: Suspensions not served before season end carry into the next season.
+- Friendly Matches: Do not count toward serving suspensions unless explicitly allowed by competition rules.
+
+### 🧠 Suspension Model
+
+```csharp
+public class SuspensionRecord {
+    public int PlayerId { get; set; }
+    public int EventId { get; set; }
+    public string Reason { get; set; } // "Red Card", "Accumulated Yellows", etc.
+    public int MatchesRemaining { get; set; }
+}
+```
+
+### 🔁 Suspension Workflow
+
+1. Post-Match Event Processing
+   - Count yellow/red cards.
+   - Update SuspensionRecord if thresholds met.
+   - Flag suspended players for next match.
+
+2. Squad Suggestion Filtering
+   - Exclude players with MatchesRemaining > 0 unless CoachOverride == true.
+
+3. Matchday Dashboard
+   - Show suspension indicators (e.g. 🟥, 🟨, ⛔).
+   - Prevent assignment to field zones unless overridden.
+
+4. Season Transition
+   - Persist unserved suspensions.
+   - Reset yellow card counts if competition rules allow.
+
+---
+
 ## 🔁 Key Workflows
 
 - Coach creates a new match event → selects available players → auto-suggests squad → locks key positions → prints match card
@@ -219,4 +265,4 @@ AssistantCoach/
 - Use enums for `EventType`, `AvailabilityStatus`, and `PositionCode`
 - Use SQLite for local development
 - Use GitHub Pages for deployment (Blazor WASM static site)
-- Prioritize responsiveness for iPad Mini and desktop
+- Prioritize responsiveness for iPad Air (5th gen) and 4K desktop screens
