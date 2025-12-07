@@ -21,28 +21,52 @@ AssistantManager is a Blazor WebAssembly PWA designed for amateur football coach
 ## 📦 Project Structure
 
 ```plaintext
-AssistantManager/
-├── Client/                     # Blazor WebAssembly frontend
-│   ├── Pages/                  # Routeable .razor pages (SquadSelection, EventDetail, etc.)
-│   ├── Components/             # Reusable UI components (FieldZone, BenchList, PlayerCard)
-│   ├── ViewModels/             # UI logic and state (SquadSelectionViewModel, etc.)
-│   ├── Services/               # API wrappers (PlayerService, EventService)
-│   ├── Models/                 # DTOs and UI models
-│   └── wwwroot/                # Static assets (CSS, icons, manifest.json)
-├── Server/                     # ASP.NET Core backend
-│   ├── Controllers/            # REST API endpoints (PlayersController, EventsController)
-│   ├── Models/                 # EF Core domain models (Player, Event, etc.)
-│   ├── Data/                   # AppDbContext
-│   ├── Services/               # Business logic (SquadBuilderService, etc.)
-│   └── Mapping/                # AutoMapper profiles
-├── Shared/                     # Shared DTOs, Enums, and lightweight models
-│   ├── DTOs/                   # PlayerDto, EventDto, etc.
-│   ├── Enums/                  # AvailabilityStatus, EventType, PositionCode
-│   └── Models/                 # FieldZone, CoachRating, etc.
-├── Tests/                      # Unit and integration tests
-│   ├── Client.Tests/           # ViewModel and UI logic tests
-│   ├── Server.Tests/           # API and service layer tests
-│   └── Shared.Tests/           # DTO and mapping tests
+AssistantManager.sln
+│
+├── Client\                     # Blazor WebAssembly frontend
+│   ├── Pages\                  # Razor pages (SquadSelection.razor, Calendar.razor, DrillLibrary.razor)
+│   ├── Components\             # Reusable UI elements (PlayerCard.razor, FieldZone.razor, DrillPreview.razor)
+│   ├── ViewModels\             # UI logic (SquadSelectionViewModel.cs, DrillPlaybackViewModel.cs)
+│   ├── Services\               # API wrappers (PlayerService.cs, DrillService.cs)
+│   ├── Models\                 # DTOs for client use (mirrored from Shared)
+│   ├── Interop\                # JS interop for Unity, Three.js, Babylon.js
+│   ├── Prompts\                # Modular prompt starter kit (PromptKit.cs, PromptTemplates.json)
+│   ├── wwwroot\                # Static assets (CSS, icons, manifest.json, playback scripts)
+│   └── Program.cs
+│
+├── Server\                     # ASP.NET Core backend
+│   ├── Controllers\            # REST endpoints (PlayersController.cs, DrillsController.cs)
+│   ├── Data\                   # EF Core DbContext (AppDbContext.cs) + seeders
+│   ├── Models\                 # Domain models (Player.cs, Event.cs, Drill.cs)
+│   ├── Services\               # Business logic (SquadBuilderService.cs, DrillCompilerService.cs)
+│   ├── Migrations\             # EF Core migrations
+│   ├── Mapping\                # AutoMapper profiles (MappingProfile.cs)
+│   └── Program.cs
+│
+├── UnityEditor\                # Unity drill editor (PC-only)
+│   ├── Scenes\                 # Unity scenes for drill creation
+│   ├── Scripts\                # C# scripts for editor logic
+│   ├── Export\                 # JSON or script exports for playback
+│   └── README.md               # Integration notes and usage
+│
+├── Shared\                     # Shared contracts between Client and Server
+│   ├── DTOs\                   # Data transfer objects (PlayerDto.cs, DrillDto.cs)
+│   ├── Enums\                  # AvailabilityStatus.cs, EventType.cs, DrillCategory.cs
+│   ├── Models\                 # Lightweight shared models (FieldZone.cs, Drill.cs)
+│   └── Validation\             # Optional: FluentValidation rules
+│
+├── Prompts\                    # Copilot instructions and modular scaffolding
+│   ├── PromptKit.md            # Modular prompt starter kit (annotated)
+│   ├── CopilotInstructions.md # Architecture and scaffolding guide
+│   └── README.md
+│
+├── Tests\                      # Unit and integration tests
+│   ├── Client.Tests\           # ViewModel and UI logic tests
+│   ├── Server.Tests\           # API and service layer tests
+│   ├── UnityEditor.Tests\      # Drill logic and export tests
+│   └── Shared.Tests\           # DTO and mapping tests
+│
+└── README.md                   # Project overview and setup
 ```
 
 ---
