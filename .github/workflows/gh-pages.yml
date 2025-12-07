@@ -1,0 +1,27 @@
+name: Deploy Client to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+      - name: Restore
+        run: dotnet restore AssistantManager.sln
+      - name: Build Client
+        run: |
+          dotnet publish src/Client/Client.csproj -c Release -o publish_output
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./publish_output
+          # GitHub token is automatically provided in the action environment
