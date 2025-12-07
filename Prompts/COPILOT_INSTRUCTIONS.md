@@ -29,8 +29,10 @@ AssistantManager.sln
 │   ├── ViewModels\             # UI logic (SquadSelectionViewModel.cs, DrillPlaybackViewModel.cs)
 │   ├── Services\               # API wrappers (PlayerService.cs, DrillService.cs)
 │   ├── Models\                 # DTOs for client use (mirrored from Shared)
-│   ├── Interop\                # JS interop for Unity, Three.js, Babylon.js
-│   ├── Prompts\                # Modular prompt starter kit (PromptKit.cs, PromptTemplates.json)
+│   ├── Interop\                # JS interop layer
+│   │    ├── UnityInterop.js    # Handles Unity drill editor embedding
+│   │    ├── PlaybackInterop.js # Bridges Blazor → Three.js/Babylon.js
+│   │    └── InteropHelpers.cs  # Strongly typed C# wrappers for JSRuntime calls
 │   ├── wwwroot\                # Static assets (CSS, icons, manifest.json, playback scripts)
 │   └── Program.cs
 │
@@ -274,6 +276,50 @@ public class SuspensionRecord {
 
 ---
 
+## 🔌 Interop Layer
+
+### UnityInterop.js
+
+- Provide functions to embed the Unity drill editor in a Blazor page (desktop only).
+- Handle initialization, scene loading, and export of drill JSON.
+- Expose methods for saving/exporting drills to wwwroot/Drills.
+
+### PlaybackInterop.js
+
+- Provide functions to load and control Three.js/Babylon.js drill playback.
+- Accept Unity-exported JSON as input.
+- Support play, pause, reset, and camera controls.
+- Ensure touch-friendly controls for iPad Air (5th gen).
+
+### InteropHelpers.cs
+
+- Create strongly typed C# wrappers for JSRuntime calls.
+- Methods: LoadUnityEditor(), ExportDrillJson(), PlayDrill(), PauseDrill(), ResetDrill(), SetCameraView().
+- Bridge Blazor components (DrillViewer.razor, TrainingPlanner.razor) with JS interop functions.
+
+### 🔁 Interop Workflow
+
+1. Drill Authoring (UnityEditor)
+   - Coach creates or edits a drill in Unity.
+   - Drill exported as JSON (scene + metadata) to `UnityEditor/Export`.
+
+2. Blazor Integration (Client/Interop)
+   - `UnityInterop.js` embeds Unity editor in Blazor (desktop only).
+   - `InteropHelpers.cs` provides C# wrappers for Unity export calls.
+   - Exported JSON placed in `wwwroot/Drills` during build/deployment for client access.
+
+3. Drill Playback (Three.js/Babylon.js)
+   - `PlaybackInterop.js` loads Unity‑exported JSON.
+   - Provides play, pause, reset, and camera controls.
+   - `InteropHelpers.cs` bridges Blazor components (`DrillViewer.razor`, `TrainingPlanner.razor`) with playback functions.
+
+4. Cross‑Device Responsiveness
+   - Desktop: full Unity editor + playback.
+   - iPad Air: playback only, touch‑friendly controls.
+   - Offline mode supported via cached JSON in `wwwroot`.
+
+---
+
 ## 🧪 Testing & Extensibility
 
 - Use dependency injection for services (e.g. `ISquadService`)
@@ -281,6 +327,43 @@ public class SuspensionRecord {
 - DTOs should be mapped via AutoMapper
 - Support offline mode via local storage (future)
 - Support print-friendly views for matchday and training
+
+### 🧪 Testing Workflow
+
+1. Core Models Validation
+   - Unit tests for `Player`, `Event`, `Drill`, and related DTOs.
+   - Ensure serialization/deserialization works correctly between Server and Client.
+   - Validate AutoMapper profiles for DTO ↔ Domain conversions.
+
+2. ViewModel Logic
+   - Test `SquadSelectionViewModel`: drag/drop operations, auto‑suggest accuracy, bench handling.
+   - Test `EventDetailViewModel`: load, update, and save availability.
+   - Mock services to isolate UI logic from backend.
+
+3. Suspension Rules
+   - Verify red card, second yellow, and accumulated yellow logic.
+   - Confirm carry‑over suspensions persist across season boundaries.
+   - Ensure suspended players are excluded from squad suggestions unless overridden.
+
+4. Interop Layer
+   - Test `UnityInterop.js`: confirm Unity editor embeds correctly and exports JSON.
+   - Test `PlaybackInterop.js`: validate playback controls (play, pause, reset, camera).
+   - Test `InteropHelpers.cs`: ensure Blazor ↔ JSRuntime calls are correctly wired.
+
+5. Drill Export & Playback
+   - Validate Unity‑exported JSON loads in `DrillViewer.razor`.
+   - Confirm playback works on both desktop (4K) and iPad Air (touch controls).
+   - Regression tests for drill metadata in `DrillLibrary.cs`.
+
+6. API Controllers
+   - Integration tests for `PlayersController`, `EventsController`, `AvailabilityController`, `SquadController`.
+   - Ensure correct HTTP status codes and payloads.
+   - Test squad suggestion endpoint with varied player states (injured, suspended, unavailable).
+
+7. Deployment & Responsiveness
+   - Test GitHub Pages deployment with service worker offline support.
+   - Validate responsive layouts for iPad Air and 4K desktop.
+   - Print‑friendly view tests for matchday and training planner.
 
 ---
 
@@ -290,3 +373,4 @@ public class SuspensionRecord {
 - Use SQLite for local development
 - Use GitHub Pages for deployment (Blazor WASM static site)
 - Prioritize responsiveness for iPad Air (5th gen) and 4K desktop screens
+- Target framework: net10.0 (Visual Studio 2026).
