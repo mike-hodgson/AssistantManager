@@ -1,0 +1,40 @@
+# Normalize line endings across platforms
+* text=auto
+# Treat C# and Razor files with language-specific diffing
+*.cs     diff=csharp
+*.razor  diff=html
+*.cshtml diff=html
+# JSON, XML, and config files as text
+*.json   text
+*.xml    text
+*.config text
+*.md     text
+*.yml    text
+*.yaml   text
+# Mark binary assets so Git doesn't try to diff them
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.mp4    binary
+*.mov    binary
+*.wav    binary
+*.mp3    binary
+*.fbx    binary
+*.unity  binary
+*.prefab binary
+# Unity-specific large assets (prepare for Git LFS if needed)
+*.psd    filter=lfs diff=lfs merge=lfs
+*.tga    filter=lfs diff=lfs merge=lfs
+*.fbx    filter=lfs diff=lfs merge=lfs
+*.mp4    filter=lfs diff=lfs merge=lfs
+# Scripts and prompts as text
+Prompts/* text
+docs/*    text
+# Ensure solution and project files are treated as text
+*.sln     text eol=crlf
+*.csproj  text eol=crlf
+*.vbproj  text eol=crlf
+*.fsproj  text eol=crlf
+*.xproj   text eol=crlf
