@@ -182,7 +182,7 @@ gantt
 
     section Foundation
     Setup Solution & Projects        :done,    des1, 2025-11-01, 5d
-    Configure .NET 8 + GitHub Pages  :active,  des2, 2025-11-06, 5d
+    Configure .NET 10 + GitHub Pages :active,  des2, 2025-11-06, 5d
     Setup SQLite + EF Core           :         des3, 2025-11-11, 5d
 
     section Core Models
@@ -231,8 +231,8 @@ gantt
 
 ### 🎯 Milestone 1 – Foundation
 
-- [ ] Create VS2026 solution `AssistantManager`
-- [ ] Add projects: Client (Blazor WASM), Server (ASP.NET Core Web API), Shared (class library)
+- [x] Create VS2026 solution `AssistantManager`
+- [x] Add projects: Client (Blazor WASM), Server (ASP.NET Core Web API), Shared (class library)
 - [ ] Configure for .NET 10 and GitHub Pages deployment
 - [ ] Set up SQLite + EF Core
 
