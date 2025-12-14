@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,17 +12,30 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.x'
+          dotnet-version: '10.0.x'
+
       - name: Restore
         run: dotnet restore AssistantManager.sln
-      - name: Build Client
+
+      - name: Remove placeholder service-worker-assets (allow SDK to generate)
         run: |
-          dotnet publish src/Client/Client.csproj -c Release -o publish_output
+          if [ -f src/Client/wwwroot/service-worker-assets.js ]; then rm src/Client/wwwroot/service-worker-assets.js; fi
+
+      - name: Publish Client (Blazor WASM)
+        run: |
+          dotnet publish src/Client/Client.csproj -c Release -o publish_output \
+            /p:BaseHref=/AssistantManager/
+
+      - name: Create 404 fallback for GitHub Pages
+        run: |
+          if [ -f publish_output/wwwroot/index.html ]; then cp publish_output/wwwroot/index.html publish_output/wwwroot/404.html; fi
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          publish_dir: ./publish_output
-          # GitHub token is automatically provided in the action environment
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./publish_output/wwwroot
