@@ -18,6 +18,13 @@ AssistantManager is a Blazor WebAssembly PWA designed for amateur football coach
 
 ---
 
+## Security Guidelines
+- Never hardcode secrets (API keys, connection strings, tokens).
+- Use environment variables or configuration providers (e.g., appsettings.json with secrets excluded from source control).
+- Sensitive data must not be committed to the repo.
+ 
+---
+
 ## 📦 Project Structure
 
 ```plaintext
