@@ -16,6 +16,9 @@ Release/
 *.userosscache
 *.sln.docstates
 
+# Settings files
+appsettings.Development.json
+
 # Helper files
 Prompts/Copilot chat notes.txt
 
